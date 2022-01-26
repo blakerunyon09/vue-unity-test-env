@@ -2,7 +2,7 @@
   <div v-if="item.type === 'folder'" class="menu-item" @click="handleFolderClick" >
     {{item.label}}
   </div>
-  <div v-else>
+  <div v-else-if="problem" >
     <div class="menu-item" @click="handleProblemClick" >
       {{problem.displayTitle}}
     </div>
@@ -14,21 +14,22 @@
 
 <script>
   import { mapState } from 'vuex'
+  import { SET_MENU_POINTER } from '../../../store/types'
 
   export default {
     name: 'MenuItem',
     props: ['item'],
     methods: {
       handleFolderClick() {
-        this.$store.dispatch("setMenuPointer", this.item.id)
+        this.$store.commit(SET_MENU_POINTER, this.item.id)
       },
       handleProblemClick() {
-        // window.unityInstance.SendMessage('JSCaller', 'onClickFunction', this.problem.jsonFigure);
+        console.log('NEED TO HANDLE UNITY PROBLEM LOAD HERE')
       }
     },
     computed: {
       ...mapState({
-      problems: state => state.problems,
+      problems: state => state.menu.problems,
       }),
       problem: function() {
         return this.problems?.find(problem => this.item.id === problem.contentId)

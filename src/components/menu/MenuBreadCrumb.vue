@@ -6,13 +6,14 @@
 </template>
 
 <script>
+  import { SET_MENU_POINTER } from '../../../store/types'
 
   export default {
     name: 'MenuBreadCrumb',
     props: ['breadcrumb'],
     methods: {
       handleClick() {
-        this.$store.dispatch("setMenuPointer", this.breadcrumb.parent)
+        this.$store.commit(SET_MENU_POINTER, this.breadcrumb.parent)
       }
     }
   }

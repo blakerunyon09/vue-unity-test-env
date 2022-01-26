@@ -17,7 +17,6 @@
       MenuBreadCrumb
     },
     beforeMount() {
-      console.log("Cha.")
       this.$store.dispatch("setMenuFileStructure")
       this.$store.dispatch("setProblems")
     },
