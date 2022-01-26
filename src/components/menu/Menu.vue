@@ -17,13 +17,14 @@
       MenuBreadCrumb
     },
     beforeMount() {
+      console.log("Cha.")
       this.$store.dispatch("setMenuFileStructure")
       this.$store.dispatch("setProblems")
     },
     computed: {
       ...mapState({
-      menuFileStructure: state => state.menuFileStructure,
-      menuPointer: state => state.menuPointer,
+      menuFileStructure: state => state.menu.menuFileStructure,
+      menuPointer: state => state.menu.menuPointer,
       }),
       currentMenu: function() {
         return this.menuFileStructure[this.menuPointer].children
