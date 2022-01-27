@@ -15,6 +15,7 @@
 <script>
   import { mapState } from 'vuex'
   import { SET_MENU_POINTER } from '../../../store/types'
+  import { loadProblemToCanvas } from '../../../utils/unityMessages'
 
   export default {
     name: 'MenuItem',
@@ -24,7 +25,7 @@
         this.$store.commit(SET_MENU_POINTER, this.item.id)
       },
       handleProblemClick() {
-        console.log('NEED TO HANDLE UNITY PROBLEM LOAD HERE')
+        loadProblemToCanvas(this.problem.jsonFigure)
       }
     },
     computed: {

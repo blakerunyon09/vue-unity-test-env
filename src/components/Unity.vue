@@ -7,28 +7,28 @@
 </template>
 
 <script>
-export default {
-  name: 'Unity',
-  // mounted() {
-  //   const canvas = document.querySelector("#unity-canvas");
+  import UnityLoaderService from '../../utils/loadingService'
 
-  //   const loaderUrl = "unity/Build/vue_testing.loader.js";
-  //   const config = {
-  //     dataUrl: "unity/Build/vue_testing.data",
-  //     frameworkUrl: "unity/Build/vue_testing.framework.js",
-  //     codeUrl: "unity/Build/vue_testing.wasm",
-  //     symbolsUrl: "unity/Build/vue_testing.symbols.json",
-  //   };
+  export default {
+    name: 'Unity',
+    props: ['unityContent'],
+    data() {
+      return {
+        unityLoaderService: new UnityLoaderService(),
+      }
+    },
+    mounted() {
+      this.unityLoaderService.append(
+        this.unityContent.loaderURL,
+        () => {
+          const canvas = document.querySelector('#unity-canvas')
+          window.createUnityInstance(canvas, this.unityContent.config)
+            .then((instance) => this.unityContent.setUnityInstance(instance))
+        }
+      )
+    }
+  }
 
-  //   const script = document.createElement("script");
-  //   script.src = loaderUrl;
-  //   script.addEventListener('load', () => {
-  //     window.createUnityInstance(canvas, config)
-  //   })
-    
-  //   document.body.appendChild(script);
-  // }
-}
 </script>
 
 <style>

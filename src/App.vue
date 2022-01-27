@@ -1,29 +1,26 @@
 <template>
   <main>
     <Menu />
-    <Unity />
+    <Unity :unity-content="UnityContent" />
   </main>
 </template>
 
 <script>
 import Menu from './components/menu/Menu.vue'
 import Unity from './components/Unity.vue'
-import UnityContext from './UnityContext.js'
+import  { UnityContent } from './UnityContext'
 
 export default {
   name: 'App',
   data() {
     return {
-      UnityContext: null
+      UnityContent
     }
   },
   components: {
     Menu,
     Unity
   },
-  mounted() {
-    UnityContext()
-  }
 }
 </script>
 

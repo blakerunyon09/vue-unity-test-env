@@ -1,19 +1,60 @@
-export default function UnityContext() {
-  const canvas = document.querySelector("#unity-canvas");
+class UnityClass {
+  constructor(loaderURL, config){
+    this.loaderURL = loaderURL,
+    this.config = {...config}
+  }
 
-  const loaderUrl = "unity/Build/vue_testing.loader.js";
-  const config = {
+  setComponentInstance(unityComponentInstance) {
+    this.unityComponent = unityComponentInstance;
+  }
+
+  setUnityInstance(unityInstance) {
+      this.unityInstance = unityInstance;
+  }
+
+  remove() {
+    if (
+        typeof this.unityInstance !== "undefined" &&
+        typeof this.unityInstance.Quit === "function"
+    )
+        return this.unityInstance.Quit(() => {
+            this.triggerUnityEvent("quitted");
+            this.unityInstance = undefined;
+        });
+  }
+
+  send(gameObjectName, methodName, parameter) {
+    if (this.unityInstance != null) {
+        if (typeof parameter === "undefined") {
+            this.unityInstance.SendMessage(gameObjectName, methodName);
+        } else {
+            this.unityInstance.SendMessage(
+                gameObjectName,
+                methodName,
+                parameter
+            );
+        }
+    }
+  }
+
+  on(eventName, eventCallback) {
+    this.unityEvents.push({
+        eventName: eventName,
+        eventCallback: eventCallback
+    });
+
+    window.VueUnityWebGL[eventName] = parameter => {
+        return eventCallback(parameter);
+    };
+  }
+}
+
+export const UnityContent = new UnityClass(
+  "unity/Build/vue_testing.loader.js",
+  {
     dataUrl: "unity/Build/vue_testing.data",
     frameworkUrl: "unity/Build/vue_testing.framework.js",
     codeUrl: "unity/Build/vue_testing.wasm",
     symbolsUrl: "unity/Build/vue_testing.symbols.json",
-  };
-
-  const script = document.createElement("script");
-  script.src = loaderUrl;
-  document.body.appendChild(script);
-
-  script.addEventListener('load', async () => {
-    window.createUnityInstance(canvas, config)
-  })
-}
+  }
+)
