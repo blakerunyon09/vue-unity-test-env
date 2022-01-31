@@ -6,34 +6,52 @@
     <div class="menu-item" @click="handleProblemClick" >
       {{problem.displayTitle}}
     </div>
-    <div class="problem-text" >
-      {{problem.problemText}}
+    <div v-if="isActiveProblem" class="problem-text-wrapper">
+      <div class="problem-text" :class="{active: isActiveProblem}" >
+        <MathText :text="problem.problemText" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import { SET_MENU_POINTER } from '../../../store/types'
-  import { loadProblemToCanvas } from '../../../utils/unityMessages'
+  import { mapState, mapActions, mapMutations } from 'vuex'
+  import { SET_MENU_POINTER, CLEAR_PROBLEM_POINTER } from '../../../store/types'
+  import MathText from '../shared/mathText.vue'
 
   export default {
     name: 'MenuItem',
     props: ['item'],
+    components: {
+      MathText
+    },
     methods: {
+      ...mapActions([ 'setProblemPointer' ]),
+      ...mapMutations([ SET_MENU_POINTER, CLEAR_PROBLEM_POINTER ]),
       handleFolderClick() {
-        this.$store.commit(SET_MENU_POINTER, this.item.id)
+        this.SET_MENU_POINTER(this.item.id)
       },
       handleProblemClick() {
-        loadProblemToCanvas(this.problem.jsonFigure)
+        if(!this.isActiveProblem) {
+          this.setProblemPointer(this.problem)
+        } else {
+          this.CLEAR_PROBLEM_POINTER()
+        }
       }
     },
     computed: {
       ...mapState({
       problems: state => state.menu.problems,
+      problemPointer: state => state.menu.problemPointer,
       }),
       problem: function() {
         return this.problems?.find(problem => this.item.id === problem.contentId)
+      },
+      isActiveProblem: function() {
+        return this.problem.contentId === this.problemPointer
+      },
+      problemText: function() {
+        return this.problem.problemText
       }
     }
   }
@@ -49,6 +67,7 @@
     font-weight: bold;
     font-size: 24px;
     cursor: pointer;
+    border-bottom: 1px solid #2c3e50;
   }
 
   .menu-item:hover {
@@ -56,7 +75,19 @@
     color: #81C506;
   }
 
-  .problem-text {
-    padding: 20px;
+  .problem-text-wrapper {
+    background-color: white;
   }
+
+  .problem-text {
+    height: 0;
+    overflow: hidden
+  }
+
+  .active {
+    height: 100%;
+    padding: 20px;
+    border-bottom: 1px solid #2c3e50;
+  }
+
 </style>
