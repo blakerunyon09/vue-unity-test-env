@@ -7,25 +7,12 @@
 </template>
 
 <script>
-  import UnityLoaderService from '../../utils/loadingService'
+   import UnityContext from '../../utils/UnityContext'
 
   export default {
     name: 'Unity',
-    props: ['unityContent'],
-    data() {
-      return {
-        unityLoaderService: new UnityLoaderService(),
-      }
-    },
-    mounted() {
-      this.unityLoaderService.append(
-        this.unityContent.loaderURL,
-        () => {
-          const canvas = document.querySelector('#unity-canvas')
-          window.createUnityInstance(canvas, this.unityContent.config)
-            .then((instance) => this.unityContent.setUnityInstance(instance))
-        }
-      )
+    beforeMount() {
+      UnityContext.loadScript()
     }
   }
 

@@ -1,7 +1,15 @@
 <template>
   <aside v-if="menuFileStructure">
-    <MenuBreadCrumb v-if="checkBreadCrumb" :breadcrumb="breadcrumb" />
-    <MenuItem v-for="item in currentMenu" :key="menuFileStructure[item]" :item="menuFileStructure[item]" />
+    <MenuBreadCrumb 
+      v-if="checkBreadCrumb" 
+      :breadcrumb="breadcrumb" 
+    />
+    <MenuItem 
+      v-for="(item, index) in currentMenu" 
+      :key="menuFileStructure[item]" 
+      :item="menuFileStructure[item]" 
+      :index="index" 
+    />
   </aside>
 </template>
 
